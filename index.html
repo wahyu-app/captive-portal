@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#071c38" />
+    <title>PERKOM Wi-Fi</title>
+    <link rel="icon" href="./assets/favicon.svg" type="image/svg+xml" />
+    <link rel="preload" href="./assets/fonts/inter-regular.ttf" as="font" type="font/ttf" crossorigin />
+    <link rel="stylesheet" href="./assets/styles.css" />
+    <script src="./main.js" defer></script>
+  </head>
+  <body class="font-primary bg-[var(--page)] text-white antialiased">
+    <div class="fixed inset-0 -z-10 bg-[url('./background.jpg')] bg-cover bg-center" aria-hidden="true">
+      <div class="absolute inset-0 bg-[var(--overlay)]"></div>
+    </div>
+    <main class="flex min-h-svh items-center justify-center p-[24px]">
+      <section id="portal" aria-labelledby="portal-title" class="my-auto flex w-full max-w-[26.25rem] shrink-0 flex-col gap-6 rounded-xl bg-[var(--panel)] p-8 shadow-[0_.75rem_2.5rem_var(--shadow)] inset-ring-[length:var(--hairline)] inset-ring-[var(--panel-border)] backdrop-blur-[1.25rem]">
+        <header id="portal-header" class="flex flex-col gap-2.5">
+          <div class="flex h-[5.875rem] items-center justify-center">
+            <img src="./assets/perkom-logo.png" alt="PERKOM" width="196" height="57" class="h-[3.584375rem] w-[12.275rem] object-contain" />
+          </div>
+          <div id="connected-badge" class="hidden items-center gap-2 text-[var(--success)]">
+            <svg class="size-[1.125rem] shrink-0" aria-hidden="true"><use href="./assets/icons.svg#shield-check"></use></svg>
+            <span class="text-[.6875rem] leading-[1.181818] font-semibold tracking-[.075rem]">CONNECTED</span>
+          </div>
+          <div id="portal-heading" class="contents">
+            <h1 id="portal-title" tabindex="-1" class="text-[1.5rem] leading-[1.208333] font-semibold tracking-[-.04375rem] outline-none">Sign in to Wi-Fi</h1>
+            <p id="portal-subtitle" class="text-[.8125rem] leading-[1.23077] text-[var(--secondary)] max-sm:leading-[1.45]">Use your work account to connect.</p>
+          </div>
+        </header>
+
+        <div id="failure-notice" role="alert" class="hidden gap-2.5 rounded-md bg-[var(--error-bg)] p-3.5 inset-ring-[length:var(--hairline)] inset-ring-[var(--error-border)]">
+          <svg class="size-[1.125rem] shrink-0 text-[var(--error-icon)]" aria-hidden="true"><use href="./assets/icons.svg#circle-alert"></use></svg>
+          <div class="flex min-w-0 flex-1 flex-col gap-[.3125rem]">
+            <p class="text-[.75rem] leading-[1.25] font-semibold text-[var(--error-title)]">Sign-in failed</p>
+            <p id="failure-description" class="text-[.75rem] leading-[1.6] text-[var(--error-text)]">Incorrect email or password. Please re-enter your work account credentials.</p>
+          </div>
+        </div>
+        <div id="expired-notice" class="hidden items-center gap-2 rounded-md bg-[var(--warning-bg)] px-3.5 py-3 text-[var(--warning)] inset-ring-[length:var(--hairline)] inset-ring-[var(--warning-border)]">
+          <svg class="size-[1.0625rem] shrink-0" aria-hidden="true"><use href="./assets/icons.svg#key-round"></use></svg>
+          <p class="text-[.75rem] leading-[1.25] font-medium">Password change required</p>
+        </div>
+        <p id="success-notice" role="status" class="hidden rounded-md bg-[var(--success-bg)] p-3.5 text-[.75rem] leading-[1.6] text-[var(--success)] inset-ring-1 inset-ring-[var(--success-border)]"></p>
+
+        <form id="sign-in-form" class="flex flex-col gap-6" novalidate>
+          <div class="flex flex-col gap-4">
+            <div class="field">
+              <label for="email" class="field-label">Work email</label>
+              <div class="input-shell">
+                <svg class="field-icon" aria-hidden="true"><use href="./assets/icons.svg#mail"></use></svg>
+                <input id="email" name="email" type="email" placeholder="name@company.com" autocomplete="username" autocapitalize="none" spellcheck="false" required class="field-input" />
+              </div>
+              <p id="email-error" class="field-error hidden"></p>
+            </div>
+            <div class="field">
+              <label for="password" class="field-label">Password</label>
+              <div class="input-shell">
+                <svg class="field-icon" aria-hidden="true"><use href="./assets/icons.svg#lock-keyhole"></use></svg>
+                <input id="password" name="password" type="password" placeholder="Enter your password" autocomplete="current-password" required class="field-input" />
+                <button type="button" data-toggle="password" aria-label="Show password" aria-pressed="false" class="password-toggle">
+                  <svg class="field-icon" aria-hidden="true"><use href="./assets/icons.svg#eye-off"></use></svg>
+                </button>
+              </div>
+              <p id="password-error" class="field-error hidden"></p>
+            </div>
+          </div>
+          <div class="flex flex-col gap-3.5">
+            <button id="connect-button" type="submit" class="primary-button">Connect</button>
+            <p class="terms">By signing in, you agree to the company’s<br />internet usage policy.</p>
+          </div>
+        </form>
+
+        <form id="password-form" class="hidden flex-col gap-6" novalidate>
+          <div class="flex flex-col gap-4">
+            <div class="field">
+              <label for="current-password" class="field-label">Current password</label>
+              <div class="input-shell">
+                <svg class="field-icon" aria-hidden="true"><use href="./assets/icons.svg#lock-keyhole"></use></svg>
+                <input id="current-password" name="current-password" type="password" placeholder="Enter your current password" autocomplete="current-password" required class="field-input" />
+                <button type="button" data-toggle="current-password" aria-label="Show current password" aria-pressed="false" class="password-toggle">
+                  <svg class="field-icon" aria-hidden="true"><use href="./assets/icons.svg#eye-off"></use></svg>
+                </button>
+              </div>
+              <p id="current-password-error" class="field-error hidden"></p>
+            </div>
+            <div class="field">
+              <label for="new-password" class="field-label">New password</label>
+              <div class="input-shell">
+                <svg class="field-icon" aria-hidden="true"><use href="./assets/icons.svg#lock-keyhole"></use></svg>
+                <input id="new-password" name="new-password" type="password" placeholder="Enter your new password" autocomplete="new-password" required class="field-input" />
+                <button type="button" data-toggle="new-password" aria-label="Show new password" aria-pressed="false" class="password-toggle">
+                  <svg class="field-icon" aria-hidden="true"><use href="./assets/icons.svg#eye-off"></use></svg>
+                </button>
+              </div>
+              <p id="new-password-error" class="field-error hidden"></p>
+            </div>
+            <div class="field">
+              <label for="confirm-password" class="field-label">Confirm new password</label>
+              <div class="input-shell">
+                <svg class="field-icon" aria-hidden="true"><use href="./assets/icons.svg#lock-keyhole"></use></svg>
+                <input id="confirm-password" name="confirm-password" type="password" placeholder="Re-enter your new password" autocomplete="new-password" required class="field-input" />
+                <button type="button" data-toggle="confirm-password" aria-label="Show confirmed password" aria-pressed="false" class="password-toggle">
+                  <svg class="field-icon" aria-hidden="true"><use href="./assets/icons.svg#eye-off"></use></svg>
+                </button>
+              </div>
+              <p id="confirm-password-error" class="field-error hidden"></p>
+            </div>
+          </div>
+          <div class="flex flex-col gap-3.5">
+            <button type="submit" class="primary-button">Save new password</button>
+            <p class="terms">Once updated, sign in again<br />using your new password.</p>
+          </div>
+        </form>
+
+        <dl id="network-details" class="hidden flex-col gap-3.5 border-t-[length:var(--hairline)] border-[var(--divider)] pt-[1.125rem] text-[.8125rem] leading-[1.23077]">
+          <div class="flex items-center justify-between gap-4">
+            <dt class="text-[var(--muted)]">Network</dt><dd class="font-medium">PERKOM Wi-Fi</dd>
+          </div>
+          <div class="flex items-center justify-between gap-4">
+            <dt class="text-[var(--muted)]">Status</dt><dd class="font-medium text-[var(--success)]">Active</dd>
+          </div>
+        </dl>
+        <footer class="flex items-center justify-center gap-[.4375rem] border-t-[length:var(--hairline)] border-[var(--divider)] pt-4 text-[.6875rem] leading-[1.181818]">
+          <span class="text-[var(--muted)]">Need help?</span>
+          <button id="support-button" type="button" class="cursor-pointer rounded-sm font-medium underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--focus)]">Contact Support</button>
+        </footer>
+      </section>
+    </main>
+    <p id="announcer" class="sr-only" aria-live="polite" aria-atomic="true"></p>
+    <dialog id="support-dialog" aria-labelledby="support-title" aria-describedby="support-description" class="m-auto w-[calc(100%-48px)] max-w-[26.25rem] rounded-xl border border-[var(--panel-border)] bg-[var(--dialog)] p-8 text-white shadow-xl backdrop:bg-[var(--modal-backdrop)] backdrop:backdrop-blur-sm">
+      <div class="flex items-center justify-between gap-4">
+        <h2 id="support-title" class="text-[1.125rem] font-semibold">Contact Support</h2>
+        <button id="close-support" type="button" aria-label="Close support dialog" class="password-toggle -mr-2">
+          <svg class="size-5" aria-hidden="true"><use href="./assets/icons.svg#x"></use></svg>
+        </button>
+      </div>
+      <p id="support-description" class="mt-4 text-[.8125rem] leading-[1.6] text-[var(--secondary)]">Support contact details haven’t been configured for this local demo. Please contact your company’s IT team for assistance.</p>
+      <button id="dismiss-support" type="button" class="primary-button mt-6">Got it</button>
+    </dialog>
+  </body>
+</html>

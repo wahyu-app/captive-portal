@@ -1,0 +1,132 @@
+@import "tailwindcss" source(none);
+@source "../index.html";
+@source "../main.js";
+
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("./fonts/inter-regular.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("./fonts/inter-medium.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("./fonts/inter-semibold.ttf") format("truetype");
+}
+
+:root {
+  color-scheme: dark;
+  --page: #071c38;
+  --overlay: #071d3bcd;
+  --panel: #102b486b;
+  --panel-border: #ffffff30;
+  --shadow: #000d2426;
+  --secondary: #c4d3e4;
+  --muted: #b8c9dc;
+  --label: #e9eff7;
+  --input: #ffffff0d;
+  --input-border: #ffffff38;
+  --placeholder: #b4c5d9;
+  --divider: #ffffff21;
+  --primary: #3279ee;
+  --primary-hover: #4389fc;
+  --focus: #94c6ff;
+  --success: #7ce2bb;
+  --success-bg: #7ce2bb14;
+  --success-border: #7ce2bb40;
+  --error-bg: #f2707014;
+  --error-border: #f3a3a345;
+  --error-input: #f3a3a3;
+  --error-title: #ffd2d2;
+  --error-text: #edc2ca;
+  --error-icon: #ffb6b6;
+  --warning: #f3ce89;
+  --warning-bg: #f5b84b14;
+  --warning-border: #f5b84b40;
+  --dialog: #102b48;
+  --modal-backdrop: #000d24b3;
+  --hairline: 1px;
+}
+
+@layer base {
+  html {
+    font-size: 16px;
+  }
+
+  .font-primary {
+    font-family: "Inter", Arial, sans-serif;
+  }
+
+  svg {
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  @media (width < 640px) {
+    html {
+      font-size: 12.48px;
+      --hairline: .78px;
+    }
+  }
+}
+
+@layer components {
+  .field {
+    @apply flex min-w-0 flex-col gap-2;
+  }
+
+  .field-label {
+    @apply text-[.75rem] leading-[1.25] font-medium text-[var(--label)];
+  }
+
+  .input-shell {
+    @apply flex h-12 items-center gap-2.5 rounded-md bg-[var(--input)] px-3.5 inset-ring-[length:var(--hairline)] inset-ring-[var(--input-border)] focus-within:outline-2 focus-within:outline-offset-2 focus-within:outline-[var(--focus)];
+  }
+
+  .input-shell:has([aria-invalid="true"]) {
+    @apply inset-ring-[var(--error-input)];
+  }
+
+  .field-icon {
+    @apply size-[1.0625rem] shrink-0 text-[var(--placeholder)];
+  }
+
+  .field-input {
+    @apply h-full w-full min-w-0 flex-1 bg-transparent text-[.75rem] leading-[1.25] text-white outline-none placeholder:text-[var(--placeholder)];
+  }
+
+  .password-toggle {
+    @apply -mr-2 flex size-[2.0625rem] shrink-0 cursor-pointer items-center justify-center rounded-sm text-[var(--placeholder)] hover:text-white focus-visible:outline-2 focus-visible:outline-[var(--focus)];
+  }
+
+  .password-toggle:hover .field-icon {
+    @apply text-white;
+  }
+
+  .primary-button {
+    @apply flex h-[2.875rem] w-full cursor-pointer items-center justify-center rounded-md bg-[var(--primary)] px-3 text-[.8125rem] leading-[1.23077] font-semibold text-white transition-colors hover:bg-[var(--primary-hover)] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--focus)] motion-reduce:transition-none;
+  }
+
+  .terms {
+    @apply text-center text-[.6875rem] leading-[1.65] text-[var(--muted)];
+  }
+
+  .field-error {
+    @apply text-[.6875rem] leading-[1.5] text-[var(--error-title)];
+  }
+}
