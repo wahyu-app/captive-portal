@@ -113,10 +113,11 @@ function renderState(state, { focus = false, updateUrl = true } = {}) {
   show(signInForm, !connected && !expired);
   show(passwordForm, expired);
   byId('connect-button').textContent = failed ? 'Try again' : 'Connect';
-  byId('password').placeholder = failed ? 'Re-enter your password' : 'Enter your password';
+  byId('password').placeholder = failed ? 'Your password' : 'Enter password';
   if (failed) {
-    byId('password').setAttribute('aria-invalid', 'true');
-    byId('password').setAttribute('aria-describedby', 'failure-description');
+    signInForm.setAttribute('aria-describedby', 'failure-description');
+  } else {
+    signInForm.removeAttribute('aria-describedby');
   }
   if (connected) signInForm.reset();
   if (updateUrl) {
@@ -127,7 +128,7 @@ function renderState(state, { focus = false, updateUrl = true } = {}) {
   }
   document.title = `${heading} · PERKOM Wi-Fi`;
   if (focus) {
-    title.focus();
+    (failed ? byId('password') : title).focus();
     byId('announcer').textContent = `${heading}. ${description}`;
   }
 }
