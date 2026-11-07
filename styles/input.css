@@ -141,4 +141,13 @@
   .field-error {
     @apply text-[.6875rem] leading-[1.5] text-[var(--error-title)];
   }
+
+  .demo-dropdown {
+    @apply fixed right-auto bottom-auto m-0 max-h-[var(--demo-height)] w-[var(--demo-width)] max-w-none overflow-y-auto overscroll-contain rounded-md border-0 bg-[var(--dialog)] p-1 text-white shadow-[0_.5rem_1.5rem_var(--shadow)] inset-ring-[length:var(--hairline)] inset-ring-[var(--panel-border)];
+    @apply top-[var(--demo-top)] left-[var(--demo-left)];
+  }
+
+  .demo-account-option {
+    @apply flex min-h-12 w-full cursor-pointer items-center rounded-sm px-3 py-2 text-left text-[.75rem] leading-[1.4] hover:bg-[var(--input)] focus-visible:bg-[var(--input)] focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-[var(--focus)];
+  }
 }

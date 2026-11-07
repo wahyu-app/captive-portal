@@ -49,7 +49,7 @@
               <label for="email" class="field-label">Work email</label>
               <div class="input-shell">
                 <svg class="field-icon" aria-hidden="true"><use href="./assets/icons.svg#mail"></use></svg>
-                <input id="email" name="email" type="email" placeholder="name@company.com" autocomplete="username" autocapitalize="none" spellcheck="false" required class="field-input" />
+                <input id="email" name="email" type="email" placeholder="name@company.com" autocomplete="username" autocapitalize="none" spellcheck="false" aria-haspopup="dialog" aria-controls="demo-accounts" required class="field-input" />
               </div>
               <p id="email-error" class="field-error hidden"></p>
             </div>
@@ -57,7 +57,7 @@
               <label for="password" class="field-label">Password</label>
               <div class="input-shell">
                 <svg class="field-icon" aria-hidden="true"><use href="./assets/icons.svg#lock-keyhole"></use></svg>
-                <input id="password" name="password" type="password" placeholder="Enter password" autocomplete="current-password" required class="field-input" />
+                <input id="password" name="password" type="password" placeholder="Enter password" autocomplete="current-password" aria-haspopup="dialog" aria-controls="demo-accounts" required class="field-input" />
                 <button type="button" data-toggle="password" aria-label="Show password" aria-pressed="false" class="password-toggle">
                   <svg class="field-icon" aria-hidden="true"><use href="./assets/icons.svg#eye-off"></use></svg>
                 </button>
@@ -127,6 +127,12 @@
         </footer>
       </section>
     </main>
+    <div id="demo-accounts" popover="manual" role="dialog" aria-labelledby="demo-accounts-title" class="demo-dropdown">
+      <h2 id="demo-accounts-title" class="px-3 pt-2 pb-1 text-[.6875rem] leading-[1.4] font-medium text-[var(--muted)]">Demo accounts</h2>
+      <button type="button" data-demo-account="success" class="demo-account-option">Successful sign-in</button>
+      <button type="button" data-demo-account="incorrect" class="demo-account-option">Incorrect email or password</button>
+      <button type="button" data-demo-account="expired" class="demo-account-option">Password expired</button>
+    </div>
     <p id="announcer" class="sr-only" aria-live="polite" aria-atomic="true"></p>
     <dialog id="support-dialog" aria-labelledby="support-title" aria-describedby="support-description" class="m-auto w-[calc(100%-32px)] max-w-[26.25rem] rounded-xl border border-[var(--panel-border)] bg-[var(--dialog)] p-8 text-white shadow-xl backdrop:bg-[var(--modal-backdrop)] backdrop:backdrop-blur-sm">
       <div class="flex items-center justify-between gap-4">

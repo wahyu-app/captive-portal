@@ -22,6 +22,136 @@ const states = {
     subtitle: 'Your work internet access is ready.\nHave a productive day!',
   },
 };
+const demoAccounts = setupDemoAccounts();
+
+function setupDemoAccounts() {
+  const popup = byId('demo-accounts');
+  const inputs = [byId('email'), byId('password')];
+  const options = [...popup.querySelectorAll('[data-demo-account]')];
+  const passwords = { success: 'Demo123!', incorrect: 'incorrect', expired: 'expired' };
+  let anchor = null;
+  let suppressFocus = false;
+  const isOpen = () => popup.matches(':popover-open');
+
+  function close({ restoreFocus = false } = {}) {
+    const previousAnchor = anchor;
+    anchor = null;
+    suppressFocus = true;
+    if (isOpen()) popup.hidePopover();
+    if (restoreFocus) previousAnchor?.focus({ preventScroll: true });
+    suppressFocus = false;
+  }
+
+  function position() {
+    if (!anchor || !isOpen()) return;
+    const bounds = anchor.closest('.input-shell').getBoundingClientRect();
+    const viewport = window.visualViewport;
+    const viewLeft = viewport?.offsetLeft || 0;
+    const viewTop = viewport?.offsetTop || 0;
+    const viewWidth = viewport?.width || document.documentElement.clientWidth;
+    const viewHeight = viewport?.height || window.innerHeight;
+    const padding = 8;
+    const gap = parseFloat(getComputedStyle(document.documentElement).fontSize) / 2;
+    const width = Math.min(bounds.width, viewWidth - padding * 2);
+    const left = Math.max(viewLeft + padding, Math.min(bounds.left, viewLeft + viewWidth - padding - width));
+
+    // Viewport coordinates keep the top-layer popup aligned during scrolling and keyboard resizing.
+    popup.style.setProperty('--demo-width', `${width}px`);
+    const naturalHeight = popup.scrollHeight;
+    const below = Math.max(0, viewTop + viewHeight - padding - bounds.bottom - gap);
+    const above = Math.max(0, bounds.top - gap - viewTop - padding);
+    const useBelow = below >= naturalHeight || below >= above;
+    const available = Math.max(1, Math.min(viewHeight - padding * 2, useBelow ? below : above));
+    const height = Math.min(naturalHeight, available);
+    const preferredTop = useBelow ? bounds.bottom + gap : bounds.top - gap - height;
+    const top = Math.max(viewTop + padding, Math.min(preferredTop, viewTop + viewHeight - padding - height));
+    popup.style.setProperty('--demo-left', `${left}px`);
+    popup.style.setProperty('--demo-top', `${top}px`);
+    popup.style.setProperty('--demo-height', `${available}px`);
+  }
+
+  function open(input) {
+    if (suppressFocus || signInForm.classList.contains('hidden')) return;
+    anchor = input;
+    if (!isOpen()) popup.showPopover();
+    position();
+  }
+
+  inputs.forEach((input) => {
+    input.addEventListener('focus', () => open(input));
+    input.addEventListener('click', () => open(input));
+    input.addEventListener('input', () => close());
+    input.addEventListener('keydown', (event) => {
+      if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
+        event.preventDefault();
+        open(input);
+        (event.key === 'ArrowDown' ? options[0] : options.at(-1)).focus();
+      } else if (event.key === 'Tab' && isOpen()) {
+        if (event.shiftKey) close();
+        else {
+          event.preventDefault();
+          options[0].focus();
+        }
+      }
+    });
+  });
+
+  options.forEach((button, index) => {
+    button.addEventListener('click', () => {
+      inputs[0].value = 'demo@perkom.test';
+      inputs[1].value = passwords[button.dataset.demoAccount];
+      inputs.forEach(clearError);
+      resetPasswordVisibility();
+      close();
+      byId('connect-button').focus();
+      byId('announcer').textContent = `${button.textContent.trim()} demo account filled. Press ${byId('connect-button').textContent} to continue.`;
+    });
+    button.addEventListener('keydown', (event) => {
+      if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
+        event.preventDefault();
+        const step = event.key === 'ArrowDown' ? 1 : -1;
+        options[(index + step + options.length) % options.length].focus();
+      } else if (event.key === 'Tab' && event.shiftKey && index === 0) {
+        event.preventDefault();
+        close({ restoreFocus: true });
+      } else if (event.key === 'Tab' && !event.shiftKey && index === options.length - 1) {
+        event.preventDefault();
+        const next = anchor === inputs[0] ? inputs[1] : signInForm.querySelector('[data-toggle]');
+        close();
+        next.focus();
+      }
+    });
+  });
+
+  document.addEventListener('pointerdown', (event) => {
+    if (isOpen() && !inputs.includes(event.target) && !popup.contains(event.target)) close();
+  });
+  document.addEventListener('focusin', (event) => {
+    if (isOpen() && !inputs.includes(event.target) && !popup.contains(event.target)) close();
+  });
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape' && isOpen()) {
+      event.preventDefault();
+      event.stopPropagation();
+      close({ restoreFocus: true });
+    }
+  });
+  window.addEventListener('resize', position);
+  window.addEventListener('scroll', (event) => {
+    if (!popup.contains(event.target)) position();
+  }, true);
+  window.visualViewport?.addEventListener('resize', position);
+  window.visualViewport?.addEventListener('scroll', position);
+
+  return {
+    close,
+    focusInput(input) {
+      suppressFocus = true;
+      input.focus();
+      suppressFocus = false;
+    },
+  };
+}
 
 function show(element, visible, display = 'flex') {
   element.classList.toggle('hidden', !visible);
@@ -83,6 +213,7 @@ function resetPasswordVisibility() {
 }
 
 function renderState(state, { focus = false, updateUrl = true } = {}) {
+  demoAccounts.close();
   if (!Object.hasOwn(states, state)) state = 'signin';
   const connected = state === 'connected';
   const failed = state === 'failed';
@@ -128,7 +259,8 @@ function renderState(state, { focus = false, updateUrl = true } = {}) {
   }
   document.title = `${heading} · PERKOM Wi-Fi`;
   if (focus) {
-    (failed ? byId('password') : title).focus();
+    if (failed) demoAccounts.focusInput(byId('password'));
+    else title.focus();
     byId('announcer').textContent = `${heading}. ${description}`;
   }
 }
@@ -151,6 +283,7 @@ document.querySelectorAll('input').forEach((input) => {
 
 signInForm.addEventListener('submit', (event) => {
   event.preventDefault();
+  demoAccounts.close();
   byId('email').value = byId('email').value.trim();
   if (!validate(signInForm)) return;
 
