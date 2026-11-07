@@ -124,7 +124,7 @@
         <button id="sign-out-button" type="button" class="outline-button hidden">Sign out</button>
         <footer class="flex items-center justify-center gap-[.4375rem] pt-4 text-[.6875rem] leading-[1.181818] shadow-[inset_0_var(--hairline)_0_var(--divider)]">
           <span class="text-[var(--muted)]">Need help?</span>
-          <button id="support-button" type="button" class="cursor-pointer rounded-sm font-medium underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--focus)] disabled:cursor-wait disabled:opacity-70">Contact Support</button>
+          <button id="support-button" type="button" class="cursor-pointer rounded-sm font-medium underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--focus)] disabled:cursor-default disabled:opacity-70">Contact Support</button>
         </footer>
       </section>
     </main>
@@ -135,14 +135,13 @@
       <button type="button" data-demo-account="expired" class="demo-account-option">Password expired</button>
     </div>
     <p id="announcer" class="sr-only" aria-live="polite" aria-atomic="true"></p>
-    <dialog id="support-dialog" aria-labelledby="support-title" aria-describedby="support-description" class="m-auto w-[calc(100%-32px)] max-w-[26.25rem] rounded-xl border border-[var(--panel-border)] bg-[var(--dialog)] p-8 text-white shadow-xl backdrop:bg-[var(--modal-backdrop)] backdrop:backdrop-blur-sm">
+    <dialog id="support-dialog" aria-labelledby="support-title" class="m-auto w-[calc(100%-32px)] max-w-[26.25rem] rounded-xl border border-[var(--panel-border)] bg-[var(--dialog)] p-8 text-white shadow-xl backdrop:bg-[var(--modal-backdrop)] backdrop:backdrop-blur-sm">
       <div class="flex items-center justify-between gap-4">
         <h2 id="support-title" class="text-[1.125rem] font-semibold">Contact Support</h2>
         <button id="close-support" type="button" aria-label="Close support dialog" class="password-toggle -mr-2">
           <svg class="size-5" aria-hidden="true"><use href="./assets/icons.svg#x"></use></svg>
         </button>
       </div>
-      <p id="support-description" class="mt-4 text-[.8125rem] leading-[1.6] text-[var(--secondary)]">Demo contact — not monitored.</p>
       <div class="mt-4 flex flex-col gap-2">
         <p class="text-[.8125rem] font-medium">IT Support</p>
         <p id="support-email" class="text-[.8125rem] leading-[1.6] break-all select-text">helpdesk@perkom.test</p>

@@ -383,6 +383,7 @@ function resetSupportCopy() {
   copyFeedbackTimer = null;
   byId('copy-support-email').textContent = 'Copy email';
   byId('copy-support-email').disabled = false;
+  byId('support-copy-status').classList.remove('sr-only');
   byId('support-copy-status').textContent = '';
   show(byId('support-copy-status'), false, 'block');
 }
@@ -393,6 +394,7 @@ byId('copy-support-email').addEventListener('click', async () => {
   const request = ++copyRequest;
   clearTimeout(copyFeedbackTimer);
   button.textContent = 'Copy email';
+  byId('support-copy-status').classList.remove('sr-only');
   byId('support-copy-status').textContent = '';
   show(byId('support-copy-status'), false, 'block');
   button.disabled = true;
@@ -401,6 +403,7 @@ byId('copy-support-email').addEventListener('click', async () => {
     await navigator.clipboard.writeText(byId('support-email').textContent.trim());
     if (request !== copyRequest || !supportDialog.open) return;
     button.textContent = 'Copied';
+    byId('support-copy-status').classList.add('sr-only');
     byId('support-copy-status').textContent = 'Email copied.';
     show(byId('support-copy-status'), true, 'block');
     copyFeedbackTimer = setTimeout(resetSupportCopy, 2000);
