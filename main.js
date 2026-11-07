@@ -4,6 +4,9 @@ const passwordForm = byId('password-form');
 const title = byId('portal-title');
 const subtitle = byId('portal-subtitle');
 const supportDialog = byId('support-dialog');
+let pendingAction = null;
+let copyFeedbackTimer = null;
+let copyRequest = 0;
 const states = {
   signin: {
     title: 'Sign in to Wi-Fi',
@@ -71,7 +74,7 @@ function setupDemoAccounts() {
   }
 
   function open(input) {
-    if (suppressFocus || signInForm.classList.contains('hidden')) return;
+    if (pendingAction || suppressFocus || signInForm.classList.contains('hidden')) return;
     anchor = input;
     if (!isOpen()) popup.showPopover();
     position();
@@ -154,11 +157,44 @@ function show(element, visible, display = 'flex') {
   element.classList.toggle(display, visible);
 }
 
+function cancelPendingAction() {
+  if (!pendingAction) return;
+  const action = pendingAction;
+  pendingAction = null;
+  clearTimeout(action.timer);
+  action.controls.forEach(({ control, disabled }) => { control.disabled = disabled; });
+  action.button.textContent = action.label;
+  byId('portal').removeAttribute('aria-busy');
+}
+
+function runDemoAction(button, label, complete) {
+  if (pendingAction) return;
+  demoAccounts.close();
+  const action = {
+    button,
+    label: button.textContent,
+    controls: [...byId('portal').querySelectorAll('input, button')].map(control => ({ control, disabled: control.disabled })),
+    timer: null,
+  };
+  pendingAction = action;
+  action.controls.forEach(({ control }) => { control.disabled = true; });
+  button.textContent = label;
+  byId('portal').setAttribute('aria-busy', 'true');
+  byId('announcer').textContent = label;
+  action.timer = setTimeout(() => {
+    if (pendingAction !== action) return;
+    // Restore controls before rendering so the destination field can receive focus.
+    cancelPendingAction();
+    complete();
+  }, 1000);
+}
+
 function clearError(input) {
   input.removeAttribute('aria-invalid');
   input.removeAttribute('aria-describedby');
   const error = byId(`${input.id}-error`);
   error.textContent = '';
+  delete error.dataset.validity;
   show(error, false, 'block');
 }
 
@@ -166,8 +202,28 @@ function setError(input, message) {
   const error = byId(`${input.id}-error`);
   input.setAttribute('aria-invalid', 'true');
   input.setAttribute('aria-describedby', error.id);
-  error.textContent = message;
+  error.dataset.validity = 'error';
+  if (error.textContent !== message) error.textContent = message;
   show(error, true, 'block');
+}
+
+function updatePasswordMatch() {
+  const password = byId('new-password').value;
+  const confirmation = byId('confirm-password');
+  if (!password || !confirmation.value) {
+    clearError(confirmation);
+    return;
+  }
+  if (password !== confirmation.value) {
+    setError(confirmation, 'Passwords don’t match.');
+    return;
+  }
+  const feedback = byId('confirm-password-error');
+  confirmation.removeAttribute('aria-invalid');
+  confirmation.setAttribute('aria-describedby', feedback.id);
+  feedback.dataset.validity = 'success';
+  if (feedback.textContent !== 'Passwords match.') feedback.textContent = 'Passwords match.';
+  show(feedback, true, 'block');
 }
 
 function validate(form) {
@@ -188,7 +244,7 @@ function validate(form) {
   }
   if (form === passwordForm && byId('confirm-password').value &&
       byId('confirm-password').value !== byId('new-password').value) {
-    setError(byId('confirm-password'), 'Your new passwords don’t match. Please try again.');
+    setError(byId('confirm-password'), 'Passwords don’t match.');
     firstInvalid ??= byId('confirm-password');
   }
   if (firstInvalid) {
@@ -196,6 +252,7 @@ function validate(form) {
     byId('announcer').textContent = 'Please check the highlighted fields.';
     return false;
   }
+  if (form === passwordForm) updatePasswordMatch();
   return true;
 }
 
@@ -208,7 +265,8 @@ function resetPasswordVisibility() {
   });
 }
 
-function renderState(state, { focus = false, updateUrl = true } = {}) {
+function renderState(state, { focus = false, updateUrl = true, currentPassword = 'expired' } = {}) {
+  cancelPendingAction();
   demoAccounts.close();
   if (!Object.hasOwn(states, state)) state = 'signin';
   const connected = state === 'connected';
@@ -218,6 +276,7 @@ function renderState(state, { focus = false, updateUrl = true } = {}) {
   document.querySelectorAll('input').forEach(clearError);
   resetPasswordVisibility();
   passwordForm.reset();
+  if (expired) byId('current-password').value = currentPassword;
   byId('password').value = '';
   title.textContent = heading;
   subtitle.textContent = description;
@@ -275,11 +334,15 @@ document.querySelectorAll('[data-toggle]').forEach((button) => {
 });
 
 document.querySelectorAll('input').forEach((input) => {
-  input.addEventListener('input', () => clearError(input));
+  input.addEventListener('input', () => {
+    if (input.id !== 'confirm-password') clearError(input);
+    if (input.id === 'new-password' || input.id === 'confirm-password') updatePasswordMatch();
+  });
 });
 
 signInForm.addEventListener('submit', (event) => {
   event.preventDefault();
+  if (pendingAction) return;
   demoAccounts.close();
   byId('email').value = byId('email').value.trim();
   if (!validate(signInForm)) return;
@@ -287,27 +350,74 @@ signInForm.addEventListener('submit', (event) => {
   // Reserved values select the local demo scenarios; no authentication request is sent.
   const password = byId('password').value;
   const nextState = password === 'incorrect' ? 'failed' : password === 'expired' ? 'expired' : 'connected';
-  renderState(nextState, { focus: true });
+  runDemoAction(byId('connect-button'), 'Connecting…', () => {
+    renderState(nextState, { focus: true, currentPassword: password });
+  });
 });
 
 passwordForm.addEventListener('submit', (event) => {
   event.preventDefault();
+  if (pendingAction) return;
   if (!validate(passwordForm)) return;
-  renderState('signin', { focus: true });
-  const notice = byId('success-notice');
-  notice.textContent = 'Password updated. Sign in again using your new password.';
-  show(notice, true, 'block');
+  runDemoAction(passwordForm.querySelector('[type="submit"]'), 'Saving…', () => {
+    renderState('signin', { focus: true });
+    const notice = byId('success-notice');
+    notice.textContent = 'Password updated. Sign in again using your new password.';
+    show(notice, true, 'block');
+  });
 });
 
 byId('sign-out-button').addEventListener('click', () => {
-  signInForm.reset();
-  renderState('signin', { focus: true });
-  const notice = byId('success-notice');
-  notice.textContent = 'You’ve signed out.';
-  show(notice, true, 'block');
+  runDemoAction(byId('sign-out-button'), 'Signing out…', () => {
+    signInForm.reset();
+    renderState('signin', { focus: true });
+    const notice = byId('success-notice');
+    notice.textContent = 'You’ve signed out.';
+    show(notice, true, 'block');
+  });
 });
 
-byId('support-button').addEventListener('click', () => supportDialog.showModal());
+function resetSupportCopy() {
+  copyRequest += 1;
+  clearTimeout(copyFeedbackTimer);
+  copyFeedbackTimer = null;
+  byId('copy-support-email').textContent = 'Copy email';
+  byId('copy-support-email').disabled = false;
+  byId('support-copy-status').textContent = '';
+  show(byId('support-copy-status'), false, 'block');
+}
+
+byId('copy-support-email').addEventListener('click', async () => {
+  const button = byId('copy-support-email');
+  if (button.disabled) return;
+  const request = ++copyRequest;
+  clearTimeout(copyFeedbackTimer);
+  button.textContent = 'Copy email';
+  byId('support-copy-status').textContent = '';
+  show(byId('support-copy-status'), false, 'block');
+  button.disabled = true;
+  try {
+    if (!navigator.clipboard?.writeText) throw new Error('Clipboard unavailable');
+    await navigator.clipboard.writeText(byId('support-email').textContent.trim());
+    if (request !== copyRequest || !supportDialog.open) return;
+    button.textContent = 'Copied';
+    byId('support-copy-status').textContent = 'Email copied.';
+    show(byId('support-copy-status'), true, 'block');
+    copyFeedbackTimer = setTimeout(resetSupportCopy, 2000);
+  } catch {
+    if (request !== copyRequest || !supportDialog.open) return;
+    byId('support-copy-status').textContent = 'Unable to copy. Select and copy the email manually.';
+    show(byId('support-copy-status'), true, 'block');
+  } finally {
+    if (request === copyRequest) button.disabled = false;
+  }
+});
+
+byId('support-button').addEventListener('click', () => {
+  demoAccounts.close();
+  resetSupportCopy();
+  supportDialog.showModal();
+});
 byId('close-support').addEventListener('click', () => supportDialog.close());
 byId('dismiss-support').addEventListener('click', () => supportDialog.close());
 supportDialog.addEventListener('click', (event) => {
@@ -316,7 +426,10 @@ supportDialog.addEventListener('click', (event) => {
   if (event.clientX < bounds.left || event.clientX > bounds.right ||
       event.clientY < bounds.top || event.clientY > bounds.bottom) supportDialog.close();
 });
-supportDialog.addEventListener('close', () => byId('support-button').focus());
+supportDialog.addEventListener('close', () => {
+  resetSupportCopy();
+  byId('support-button').focus();
+});
 supportDialog.addEventListener('keydown', (event) => {
   if (event.key !== 'Tab') return;
   const buttons = [...supportDialog.querySelectorAll('button:not([disabled])')];
@@ -336,4 +449,8 @@ function readState() {
 }
 
 window.addEventListener('popstate', () => renderState(readState(), { focus: true, updateUrl: false }));
+window.addEventListener('pagehide', () => {
+  cancelPendingAction();
+  resetSupportCopy();
+});
 renderState(readState(), { updateUrl: false });

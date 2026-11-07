@@ -104,7 +104,7 @@
                   <svg class="field-icon" aria-hidden="true"><use href="./assets/icons.svg#eye-off"></use></svg>
                 </button>
               </div>
-              <p id="confirm-password-error" class="field-error hidden"></p>
+              <p id="confirm-password-error" role="status" aria-atomic="true" class="field-error hidden data-[validity=success]:text-[var(--success)]"></p>
             </div>
           </div>
           <div class="flex flex-col gap-3.5">
@@ -124,7 +124,7 @@
         <button id="sign-out-button" type="button" class="outline-button hidden">Sign out</button>
         <footer class="flex items-center justify-center gap-[.4375rem] pt-4 text-[.6875rem] leading-[1.181818] shadow-[inset_0_var(--hairline)_0_var(--divider)]">
           <span class="text-[var(--muted)]">Need help?</span>
-          <button id="support-button" type="button" class="cursor-pointer rounded-sm font-medium underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--focus)]">Contact Support</button>
+          <button id="support-button" type="button" class="cursor-pointer rounded-sm font-medium underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--focus)] disabled:cursor-wait disabled:opacity-70">Contact Support</button>
         </footer>
       </section>
     </main>
@@ -142,7 +142,13 @@
           <svg class="size-5" aria-hidden="true"><use href="./assets/icons.svg#x"></use></svg>
         </button>
       </div>
-      <p id="support-description" class="mt-4 text-[.8125rem] leading-[1.6] text-[var(--secondary)]">Support contact details haven’t been configured for this local demo. Please contact your company’s IT team for assistance.</p>
+      <p id="support-description" class="mt-4 text-[.8125rem] leading-[1.6] text-[var(--secondary)]">Demo contact — not monitored.</p>
+      <div class="mt-4 flex flex-col gap-2">
+        <p class="text-[.8125rem] font-medium">IT Support</p>
+        <p id="support-email" class="text-[.8125rem] leading-[1.6] break-all select-text">helpdesk@perkom.test</p>
+        <button id="copy-support-email" type="button" class="outline-button mt-2">Copy email</button>
+      </div>
+      <p id="support-copy-status" role="status" class="hidden mt-3 text-[.75rem] leading-[1.6] text-[var(--secondary)]"></p>
       <button id="dismiss-support" type="button" class="primary-button mt-6">Got it</button>
     </dialog>
   </body>
