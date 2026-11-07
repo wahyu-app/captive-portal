@@ -99,6 +99,7 @@ function setupDemoAccounts() {
     button.addEventListener('click', () => {
       inputs[0].value = 'demo@perkom.test';
       inputs[1].value = passwords[button.dataset.demoAccount];
+      clearSignInFeedback();
       inputs.forEach(clearError);
       resetPasswordVisibility();
       close();
@@ -155,6 +156,31 @@ function setupDemoAccounts() {
 function show(element, visible, display = 'flex') {
   element.classList.toggle('hidden', !visible);
   element.classList.toggle(display, visible);
+}
+
+function clearSignInFeedback() {
+  const failed = byId('portal').dataset.state === 'failed';
+  const notice = byId('success-notice');
+  if (!failed && notice.classList.contains('hidden')) return;
+
+  show(byId('failure-notice'), false);
+  show(notice, false, 'block');
+  notice.textContent = '';
+  byId('announcer').textContent = '';
+
+  // Restore the sign-in presentation without resetting fields or moving focus.
+  if (failed) {
+    byId('portal').dataset.state = 'signin';
+    title.textContent = states.signin.title;
+    subtitle.textContent = states.signin.subtitle;
+    byId('connect-button').textContent = 'Connect';
+    byId('password').placeholder = 'Enter password';
+    signInForm.removeAttribute('aria-describedby');
+    const url = new URL(window.location.href);
+    url.searchParams.delete('state');
+    window.history.replaceState(null, '', url);
+    document.title = `${states.signin.title} · PERKOM Wi-Fi`;
+  }
 }
 
 function cancelPendingAction() {
@@ -335,6 +361,7 @@ document.querySelectorAll('[data-toggle]').forEach((button) => {
 
 document.querySelectorAll('input').forEach((input) => {
   input.addEventListener('input', () => {
+    if (signInForm.contains(input)) clearSignInFeedback();
     if (input.id !== 'confirm-password') clearError(input);
     if (input.id === 'new-password' || input.id === 'confirm-password') updatePasswordMatch();
   });
@@ -343,6 +370,7 @@ document.querySelectorAll('input').forEach((input) => {
 signInForm.addEventListener('submit', (event) => {
   event.preventDefault();
   if (pendingAction) return;
+  clearSignInFeedback();
   demoAccounts.close();
   byId('email').value = byId('email').value.trim();
   if (!validate(signInForm)) return;
