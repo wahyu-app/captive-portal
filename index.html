@@ -14,18 +14,18 @@
     <div class="fixed inset-0 -z-10 bg-[url('./background.jpg')] bg-cover bg-center" aria-hidden="true">
       <div class="absolute inset-0 bg-[var(--overlay)]"></div>
     </div>
-    <main class="flex min-h-svh items-center justify-center p-4 sm:p-6">
-      <section id="portal" aria-labelledby="portal-title" class="my-auto flex w-full max-w-[26.25rem] shrink-0 flex-col gap-6 rounded-xl bg-[var(--panel)] p-6 shadow-[0_.75rem_2.5rem_var(--shadow)] inset-ring-[length:var(--hairline)] inset-ring-[var(--panel-border)] backdrop-blur-[1.25rem] sm:p-8">
+    <main class="flex min-h-svh items-center justify-center p-[16px] sm:p-[24px]">
+      <section id="portal" aria-labelledby="portal-title" class="my-auto flex w-full max-w-[26.25rem] shrink-0 flex-col gap-6 rounded-xl bg-[var(--panel)] p-8 shadow-[0_.75rem_2.5rem_var(--shadow)] inset-ring-[length:var(--hairline)] inset-ring-[var(--panel-border)] backdrop-blur-[1.25rem]">
         <header id="portal-header" class="flex flex-col gap-2.5">
-          <div class="flex h-[5.875rem] items-center justify-center max-sm:h-[4.5825rem]">
-            <img src="./assets/perkom-logo.png" alt="PERKOM" width="196" height="57" class="h-[3.584375rem] w-[12.275rem] object-contain max-sm:h-[2.7958125rem] max-sm:w-[9.5745rem]" />
+          <div class="flex h-[5.875rem] items-center justify-center">
+            <img src="./assets/perkom-logo.png" alt="PERKOM" width="196" height="57" class="h-[3.584375rem] w-[12.275rem] object-contain" />
           </div>
           <div id="connected-badge" class="hidden items-center gap-2 text-[var(--success)]">
             <svg class="size-[1.125rem] shrink-0" aria-hidden="true"><use href="./assets/icons.svg#shield-check"></use></svg>
-            <span class="text-[.6875rem] leading-[1.181818] font-semibold tracking-[.075rem] max-sm:text-xs">CONNECTED</span>
+            <span class="text-[.6875rem] leading-[1.181818] font-semibold tracking-[.075rem]">CONNECTED</span>
           </div>
           <div id="portal-heading" class="contents">
-            <h1 id="portal-title" tabindex="-1" class="text-[1.5rem] leading-[1.208333] font-semibold tracking-[-.04375rem] outline-none max-sm:text-[1.375rem]">Sign in to Wi-Fi</h1>
+            <h1 id="portal-title" tabindex="-1" class="text-[1.5rem] leading-[1.208333] font-semibold tracking-[-.04375rem] outline-none max-sm:leading-[1.25]">Sign in to Wi-Fi</h1>
             <p id="portal-subtitle" class="text-[.8125rem] leading-[1.23077] text-[var(--secondary)] max-sm:leading-[1.45]">Use your work account to connect.</p>
           </div>
         </header>
@@ -121,14 +121,14 @@
             <dt class="text-[var(--muted)]">Status</dt><dd class="font-medium text-[var(--success)]">Active</dd>
           </div>
         </dl>
-        <footer class="flex items-center justify-center gap-[.4375rem] border-t-[length:var(--hairline)] border-[var(--divider)] pt-4 text-[.6875rem] leading-[1.181818] max-sm:text-xs">
+        <footer class="flex items-center justify-center gap-[.4375rem] pt-4 text-[.6875rem] leading-[1.181818] shadow-[inset_0_var(--hairline)_0_var(--divider)]">
           <span class="text-[var(--muted)]">Need help?</span>
           <button id="support-button" type="button" class="cursor-pointer rounded-sm font-medium underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--focus)]">Contact Support</button>
         </footer>
       </section>
     </main>
     <p id="announcer" class="sr-only" aria-live="polite" aria-atomic="true"></p>
-    <dialog id="support-dialog" aria-labelledby="support-title" aria-describedby="support-description" class="m-auto w-[calc(100%-48px)] max-w-[26.25rem] rounded-xl border border-[var(--panel-border)] bg-[var(--dialog)] p-8 text-white shadow-xl backdrop:bg-[var(--modal-backdrop)] backdrop:backdrop-blur-sm">
+    <dialog id="support-dialog" aria-labelledby="support-title" aria-describedby="support-description" class="m-auto w-[calc(100%-32px)] max-w-[26.25rem] rounded-xl border border-[var(--panel-border)] bg-[var(--dialog)] p-8 text-white shadow-xl backdrop:bg-[var(--modal-backdrop)] backdrop:backdrop-blur-sm">
       <div class="flex items-center justify-between gap-4">
         <h2 id="support-title" class="text-[1.125rem] font-semibold">Contact Support</h2>
         <button id="close-support" type="button" aria-label="Close support dialog" class="password-toggle -mr-2">
