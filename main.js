@@ -240,6 +240,7 @@ function renderState(state, { focus = false, updateUrl = true } = {}) {
   show(byId('failure-notice'), failed);
   show(byId('expired-notice'), expired);
   show(byId('network-details'), connected);
+  show(byId('sign-out-button'), connected);
   show(byId('success-notice'), false, 'block');
   show(signInForm, !connected && !expired);
   show(passwordForm, expired);
@@ -300,6 +301,11 @@ passwordForm.addEventListener('submit', (event) => {
   const notice = byId('success-notice');
   notice.textContent = 'Password updated. Sign in again using your new password.';
   show(notice, true, 'block');
+});
+
+byId('sign-out-button').addEventListener('click', () => {
+  signInForm.reset();
+  renderState('signin', { focus: true });
 });
 
 byId('support-button').addEventListener('click', () => supportDialog.showModal());
