@@ -87,11 +87,7 @@ function setupDemoAccounts() {
         open(input);
         (event.key === 'ArrowDown' ? options[0] : options.at(-1)).focus();
       } else if (event.key === 'Tab' && isOpen()) {
-        if (event.shiftKey) close();
-        else {
-          event.preventDefault();
-          options[0].focus();
-        }
+        close();
       }
     });
   });
@@ -116,7 +112,7 @@ function setupDemoAccounts() {
         close({ restoreFocus: true });
       } else if (event.key === 'Tab' && !event.shiftKey && index === options.length - 1) {
         event.preventDefault();
-        const next = anchor === inputs[0] ? inputs[1] : signInForm.querySelector('[data-toggle]');
+        const next = anchor === inputs[0] ? inputs[1] : byId('connect-button');
         close();
         next.focus();
       }
