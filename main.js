@@ -306,6 +306,9 @@ passwordForm.addEventListener('submit', (event) => {
 byId('sign-out-button').addEventListener('click', () => {
   signInForm.reset();
   renderState('signin', { focus: true });
+  const notice = byId('success-notice');
+  notice.textContent = 'You’ve signed out.';
+  show(notice, true, 'block');
 });
 
 byId('support-button').addEventListener('click', () => supportDialog.showModal());
