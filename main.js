@@ -164,8 +164,8 @@ function clearSignInFeedback() {
   if (!failed && notice.classList.contains('hidden')) return;
 
   show(byId('failure-notice'), false);
-  show(notice, false, 'block');
-  notice.textContent = '';
+  show(notice, false);
+  byId('success-message').textContent = '';
   byId('announcer').textContent = '';
 
   // Restore the sign-in presentation without resetting fields or moving focus.
@@ -322,7 +322,7 @@ function renderState(state, { focus = false, updateUrl = true, currentPassword =
   show(byId('expired-notice'), expired);
   show(byId('network-details'), connected);
   show(byId('sign-out-button'), connected);
-  show(byId('success-notice'), false, 'block');
+  show(byId('success-notice'), false);
   show(signInForm, !connected && !expired);
   show(passwordForm, expired);
   byId('connect-button').textContent = failed ? 'Try again' : 'Connect';
@@ -390,8 +390,8 @@ passwordForm.addEventListener('submit', (event) => {
   runDemoAction(passwordForm.querySelector('[type="submit"]'), 'Saving…', () => {
     renderState('signin', { focus: true });
     const notice = byId('success-notice');
-    notice.textContent = 'Password updated. Sign in again using your new password.';
-    show(notice, true, 'block');
+    byId('success-message').textContent = 'Password updated. Sign in again using your new password.';
+    show(notice, true);
   });
 });
 
@@ -400,8 +400,8 @@ byId('sign-out-button').addEventListener('click', () => {
     signInForm.reset();
     renderState('signin', { focus: true });
     const notice = byId('success-notice');
-    notice.textContent = 'You’ve signed out.';
-    show(notice, true, 'block');
+    byId('success-message').textContent = 'You’ve signed out.';
+    show(notice, true);
   });
 });
 

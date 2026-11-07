@@ -41,7 +41,10 @@
           <svg class="size-[1.0625rem] shrink-0" aria-hidden="true"><use href="./assets/icons.svg#key-round"></use></svg>
           <p class="text-[.75rem] leading-[1.25] font-medium">Password change required</p>
         </div>
-        <p id="success-notice" role="status" class="hidden rounded-md bg-[var(--success-bg)] p-3.5 text-[.75rem] leading-[1.6] text-[var(--success)] inset-ring-1 inset-ring-[var(--success-border)]"></p>
+        <div id="success-notice" role="status" class="hidden items-start gap-2.5 rounded-md bg-[var(--success-bg)] p-3.5 text-[.75rem] leading-[1.6] text-[var(--success)] inset-ring-1 inset-ring-[var(--success-border)]">
+          <svg class="size-[1.125rem] shrink-0" aria-hidden="true"><use href="./assets/icons.svg#circle-check"></use></svg>
+          <span id="success-message" class="min-w-0 flex-1"></span>
+        </div>
 
         <form id="sign-in-form" class="flex flex-col gap-6" novalidate>
           <div class="flex flex-col gap-4">
