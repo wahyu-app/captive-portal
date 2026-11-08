@@ -407,9 +407,7 @@ byId('sign-out-button').addEventListener('click', () => {
 
 function clearSupportCopyFeedback() {
   delete byId('copy-support-email').dataset.copied;
-  const check = byId('copy-support-check');
-  check.querySelector('path').getAnimations().forEach(animation => animation.cancel());
-  show(check, false, 'block');
+  show(byId('copy-support-check'), false, 'block');
   byId('copy-support-label').textContent = 'Copy email';
   byId('support-copy-status').classList.remove('sr-only');
   byId('support-copy-status').textContent = '';
@@ -438,14 +436,7 @@ byId('copy-support-email').addEventListener('click', async () => {
     if (request !== copyRequest || !supportDialog.open) return;
     button.dataset.copied = 'true';
     byId('copy-support-label').textContent = 'Copied';
-    const check = byId('copy-support-check');
-    show(check, true, 'block');
-    if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      check.querySelector('path').animate([
-        { strokeDashoffset: 1 },
-        { strokeDashoffset: 0 },
-      ], { duration: 300, easing: 'ease-out' });
-    }
+    show(byId('copy-support-check'), true, 'block');
     byId('support-copy-status').classList.add('sr-only');
     byId('support-copy-status').textContent = 'Email copied.';
     show(byId('support-copy-status'), true, 'block');
