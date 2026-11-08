@@ -1,6 +1,6 @@
-# PERKOM Captive Portal
+# Wi-Fi Captive Portal
 
-A responsive captive portal demo for PERKOM Wi-Fi, built with HTML, vanilla JavaScript, and Tailwind CSS 4. It includes sign-in, failed sign-in, password expiration, and connected screens with locally hosted fonts and assets.
+A responsive captive portal demo built with HTML, vanilla JavaScript, and Tailwind CSS 4. It includes sign-in, failed sign-in, password expiration, and connected screens with locally hosted fonts and assets.
 
 ## Requirements
 
