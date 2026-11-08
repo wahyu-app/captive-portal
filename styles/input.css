@@ -118,8 +118,31 @@
     @apply size-[1.0625rem] shrink-0 text-[var(--placeholder)];
   }
 
+  .field-input-slot {
+    @apply relative flex h-full min-w-0 flex-1;
+  }
+
   .field-input {
     @apply h-full w-full min-w-0 flex-1 bg-transparent text-[.75rem] leading-[1.25] text-white outline-none placeholder:text-[var(--placeholder)] disabled:cursor-default;
+  }
+
+  @media (hover: none) and (pointer: coarse) {
+    .field-input-slot {
+      /* Keep a 16px focus font while preserving the presentation-sized input. */
+      --field-input-scale: calc(.75 * var(--portal-scale));
+      overflow: hidden;
+    }
+
+    .field-input-slot > .field-input {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: calc(100% / var(--field-input-scale));
+      height: calc(100% / var(--field-input-scale));
+      font-size: 16px;
+      transform: scale(var(--field-input-scale));
+      transform-origin: left top;
+    }
   }
 
   .password-toggle {
