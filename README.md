@@ -1,6 +1,14 @@
 # Wi-Fi Captive Portal
 
-A responsive captive portal demo built with HTML, vanilla JavaScript, and Tailwind CSS 4. It includes sign-in, failed sign-in, password expiration, and connected screens with locally hosted fonts and assets.
+A responsive Wi-Fi captive portal demo featuring sign-in, password expiration, and connection status screens. Designed for self-guided demos across desktop, tablet, and mobile devices.
+
+## Tech Stack
+
+- **HTML5** — Page structure, forms, and dialogs.
+- **Tailwind CSS 4** — Styling and responsive layout.
+- **Vanilla JavaScript** — Demo states, validation, and interactions.
+- **Node.js 20+** — Local development server and CSS watcher.
+- **npm** — Dependency management and build commands.
 
 ## Requirements
 
