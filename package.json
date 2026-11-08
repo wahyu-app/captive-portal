@@ -3,9 +3,12 @@
   "version": "1.0.0",
   "private": true,
   "type": "module",
+  "engines": {
+    "node": "24.x"
+  },
   "scripts": {
     "dev": "node scripts/dev.mjs",
-    "build": "tailwindcss -i ./styles/input.css -o ./assets/styles.css --minify"
+    "build": "tailwindcss -i ./styles/input.css -o ./assets/styles.css --minify && node scripts/build.mjs"
   },
   "devDependencies": {
     "@tailwindcss/cli": "^4.1.0",

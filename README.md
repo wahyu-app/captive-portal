@@ -7,12 +7,12 @@ A responsive Wi-Fi captive portal demo featuring sign-in, password expiration, a
 - **HTML5** — Page structure, forms, and dialogs.
 - **Tailwind CSS 4** — Styling and responsive layout.
 - **Vanilla JavaScript** — Demo states, validation, and interactions.
-- **Node.js 20+** — Local development server and CSS watcher.
+- **Node.js 24** — Local development server, CSS watcher, and static build.
 - **npm** — Dependency management and build commands.
 
 ## Requirements
 
-- Node.js 20 or later and npm.
+- Node.js 24.x and npm.
 - A modern browser with support for the HTML Dialog and Popover APIs.
 
 ## Getting started
@@ -71,7 +71,24 @@ This is a frontend simulation. It does not authenticate users, connect to a Wi-F
 npm run build
 ```
 
-This compiles and minifies `styles/input.css` into `assets/styles.css`. Edit the source stylesheet and rebuild rather than editing the generated CSS. The build does not create a separate output directory; the static app consists of `index.html`, `main.js`, and `assets/`.
+This compiles and minifies `styles/input.css` into `assets/styles.css`, then creates a clean `dist/` directory containing `index.html`, `main.js`, and `assets/`. Edit the source stylesheet and rebuild rather than editing the generated CSS. The `dist/` directory is generated and excluded from Git.
+
+## Deploy to Vercel
+
+Push the deployment configuration and build changes to the branch you intend to deploy, then import `wahyu-app/captive-portal` into Vercel. Use the repository root (`./`) as the Root Directory.
+
+The included `vercel.json` configures:
+
+- **Framework Preset:** Other.
+- **Install Command:** `npm ci`.
+- **Build Command:** `npm run build`.
+- **Output Directory:** `dist`.
+
+The Node.js version is set to `24.x` in `package.json`. No environment variables or serverless functions are required. Vercel serves the contents of `dist/`, including the local images, fonts, and icons. State URLs such as `/?state=expired` work directly without additional routing rules.
+
+After deployment, check all four screens and the Contact Support copy-email interaction on the HTTPS URL.
+
+See [Vercel's configuration reference](https://vercel.com/docs/project-configuration/vercel-json) for the build settings.
 
 ## Project structure
 
@@ -81,6 +98,8 @@ main.js            Demo states, validation, feedback, and interactions
 styles/input.css   Tailwind source, fonts, theme, and component styles
 assets/            Compiled CSS, images, SVG icons, fonts, and licenses
 scripts/dev.mjs    Local development server and CSS watcher
+scripts/build.mjs  Static output packaging
+vercel.json        Vercel build and output configuration
 ```
 
 Colors and responsive presentation scaling are defined in `styles/input.css`. Page content and the support address are in `index.html`; demo credentials and state behavior are in `main.js`.
