@@ -390,7 +390,7 @@ passwordForm.addEventListener('submit', (event) => {
   runDemoAction(passwordForm.querySelector('[type="submit"]'), 'Saving…', () => {
     renderState('signin', { focus: true });
     const notice = byId('success-notice');
-    byId('success-message').textContent = 'Password updated. Sign in again using your new password.';
+    byId('success-message').textContent = 'Password updated. Please sign in again.';
     show(notice, true);
   });
 });
