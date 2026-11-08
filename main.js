@@ -405,15 +405,22 @@ byId('sign-out-button').addEventListener('click', () => {
   });
 });
 
+function clearSupportCopyFeedback() {
+  const check = byId('copy-support-check');
+  check.querySelector('path').getAnimations().forEach(animation => animation.cancel());
+  show(check, false, 'block');
+  byId('copy-support-label').textContent = 'Copy email';
+  byId('support-copy-status').classList.remove('sr-only');
+  byId('support-copy-status').textContent = '';
+  show(byId('support-copy-status'), false, 'block');
+}
+
 function resetSupportCopy() {
   copyRequest += 1;
   clearTimeout(copyFeedbackTimer);
   copyFeedbackTimer = null;
-  byId('copy-support-email').textContent = 'Copy email';
+  clearSupportCopyFeedback();
   byId('copy-support-email').disabled = false;
-  byId('support-copy-status').classList.remove('sr-only');
-  byId('support-copy-status').textContent = '';
-  show(byId('support-copy-status'), false, 'block');
 }
 
 byId('copy-support-email').addEventListener('click', async () => {
@@ -421,16 +428,22 @@ byId('copy-support-email').addEventListener('click', async () => {
   if (button.disabled) return;
   const request = ++copyRequest;
   clearTimeout(copyFeedbackTimer);
-  button.textContent = 'Copy email';
-  byId('support-copy-status').classList.remove('sr-only');
-  byId('support-copy-status').textContent = '';
-  show(byId('support-copy-status'), false, 'block');
+  copyFeedbackTimer = null;
+  clearSupportCopyFeedback();
   button.disabled = true;
   try {
     if (!navigator.clipboard?.writeText) throw new Error('Clipboard unavailable');
     await navigator.clipboard.writeText(byId('support-email').textContent.trim());
     if (request !== copyRequest || !supportDialog.open) return;
-    button.textContent = 'Copied';
+    byId('copy-support-label').textContent = 'Copied';
+    const check = byId('copy-support-check');
+    show(check, true, 'block');
+    if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      check.querySelector('path').animate([
+        { strokeDashoffset: 1 },
+        { strokeDashoffset: 0 },
+      ], { duration: 300, easing: 'ease-out' });
+    }
     byId('support-copy-status').classList.add('sr-only');
     byId('support-copy-status').textContent = 'Email copied.';
     show(byId('support-copy-status'), true, 'block');

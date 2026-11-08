@@ -145,7 +145,12 @@
       <div class="mt-4 flex flex-col gap-2">
         <p class="text-[.8125rem] font-medium">IT Support</p>
         <p id="support-email" class="text-[.8125rem] leading-[1.6] break-all select-text">helpdesk@perkom.test</p>
-        <button id="copy-support-email" type="button" class="outline-button mt-2">Copy email</button>
+        <button id="copy-support-email" type="button" class="outline-button mt-2 gap-1.5">
+          <svg id="copy-support-check" viewBox="0 0 24 24" aria-hidden="true" focusable="false" class="hidden size-4 shrink-0 text-[var(--success)]">
+            <path d="m5 12 4 4L19 6" pathLength="1" stroke-dasharray="1" stroke-dashoffset="0"></path>
+          </svg>
+          <span id="copy-support-label">Copy email</span>
+        </button>
       </div>
       <p id="support-copy-status" role="status" class="hidden mt-3 text-[.75rem] leading-[1.6] text-[var(--secondary)]"></p>
       <button id="dismiss-support" type="button" class="primary-button mt-6">Got it</button>
