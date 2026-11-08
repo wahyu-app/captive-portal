@@ -406,6 +406,7 @@ byId('sign-out-button').addEventListener('click', () => {
 });
 
 function clearSupportCopyFeedback() {
+  delete byId('copy-support-email').dataset.copied;
   const check = byId('copy-support-check');
   check.querySelector('path').getAnimations().forEach(animation => animation.cancel());
   show(check, false, 'block');
@@ -435,6 +436,7 @@ byId('copy-support-email').addEventListener('click', async () => {
     if (!navigator.clipboard?.writeText) throw new Error('Clipboard unavailable');
     await navigator.clipboard.writeText(byId('support-email').textContent.trim());
     if (request !== copyRequest || !supportDialog.open) return;
+    button.dataset.copied = 'true';
     byId('copy-support-label').textContent = 'Copied';
     const check = byId('copy-support-check');
     show(check, true, 'block');

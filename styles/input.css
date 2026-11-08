@@ -138,6 +138,10 @@
     @apply flex h-[2.875rem] w-full cursor-pointer items-center justify-center rounded-md border border-[var(--input-border)] bg-transparent px-3 text-[.8125rem] leading-[1.23077] font-semibold text-white transition-colors hover:bg-[var(--input)] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--focus)] motion-reduce:transition-none disabled:cursor-default disabled:opacity-70 disabled:hover:bg-transparent;
   }
 
+  #copy-support-email[data-copied="true"] {
+    @apply border-[var(--success-border)] bg-[var(--success-bg)] text-[var(--success)] hover:bg-[var(--success-bg)] focus-visible:outline-[var(--success)];
+  }
+
   .terms {
     @apply text-center text-[.6875rem] leading-[1.65] text-[var(--muted)];
   }
