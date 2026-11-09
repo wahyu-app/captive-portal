@@ -57,30 +57,12 @@
   --warning-border: #f5b84b40;
   --dialog: #102b48;
   --modal-backdrop: #000d24b3;
-  /* Fixed presentation reference measured on the MacBook, independent of viewport height. */
-  --presentation-height: 726;
-  --reference-height: 844;
-  --design-scale: .78;
-  --portal-scale: calc(var(--design-scale) * var(--presentation-height) / var(--reference-height));
-  --hairline: calc(1px * var(--portal-scale));
-}
-
-@media (width >= 640px) {
-  :root {
-    --reference-height: 1024;
-    --design-scale: 1;
-  }
-}
-
-@media (width >= 1024px) {
-  :root {
-    --reference-height: 960;
-  }
+  --hairline: 1px;
 }
 
 @layer base {
   html {
-    font-size: calc(16px * var(--portal-scale));
+    font-size: 16px;
   }
 
   .font-primary {
@@ -102,8 +84,7 @@
   }
 
   .field-label {
-    /* The mobile reference uses an 11px line box at a 12.48px base. */
-    @apply text-[.75rem] leading-[1.25] font-medium text-[var(--label)] max-sm:leading-[.88141rem];
+    @apply text-[.75rem] leading-[1.25] font-medium text-[var(--label)] max-sm:text-sm;
   }
 
   .input-shell {
@@ -123,13 +104,13 @@
   }
 
   .field-input {
-    @apply h-full w-full min-w-0 flex-1 bg-transparent text-[.75rem] leading-[1.25] text-white outline-none placeholder:text-[var(--placeholder)] disabled:cursor-default;
+    @apply h-full w-full min-w-0 flex-1 bg-transparent text-[.75rem] leading-[1.25] text-white outline-none placeholder:text-[var(--placeholder)] disabled:cursor-default max-sm:text-base;
   }
 
-  @media (hover: none) and (pointer: coarse) {
+  @media (width >= 640px) and (hover: none) and (pointer: coarse) {
     .field-input-slot {
-      /* Keep a 16px focus font while preserving the presentation-sized input. */
-      --field-input-scale: calc(.75 * var(--portal-scale));
+      /* Keep a 16px focus font with the tablet's 12px visual text size. */
+      --field-input-scale: .75;
       overflow: hidden;
     }
 
@@ -154,11 +135,11 @@
   }
 
   .primary-button {
-    @apply flex h-[2.875rem] w-full cursor-pointer items-center justify-center rounded-md bg-[var(--primary)] px-3 text-[.8125rem] leading-[1.23077] font-semibold text-white transition-colors hover:bg-[var(--primary-hover)] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--focus)] motion-reduce:transition-none disabled:cursor-default disabled:opacity-70 disabled:hover:bg-[var(--primary)];
+    @apply flex h-12 w-full cursor-pointer items-center justify-center rounded-md bg-[var(--primary)] px-3 text-[.8125rem] leading-[1.23077] font-semibold text-white transition-colors hover:bg-[var(--primary-hover)] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--focus)] motion-reduce:transition-none disabled:cursor-default disabled:opacity-70 disabled:hover:bg-[var(--primary)] max-sm:text-sm;
   }
 
   .outline-button {
-    @apply flex h-[2.875rem] w-full cursor-pointer items-center justify-center rounded-md border border-[var(--input-border)] bg-transparent px-3 text-[.8125rem] leading-[1.23077] font-semibold text-white transition-colors hover:bg-[var(--input)] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--focus)] motion-reduce:transition-none disabled:cursor-default disabled:opacity-70 disabled:hover:bg-transparent;
+    @apply flex h-12 w-full cursor-pointer items-center justify-center rounded-md border border-[var(--input-border)] bg-transparent px-3 text-[.8125rem] leading-[1.23077] font-semibold text-white transition-colors hover:bg-[var(--input)] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--focus)] motion-reduce:transition-none disabled:cursor-default disabled:opacity-70 disabled:hover:bg-transparent max-sm:text-sm;
   }
 
   #copy-support-email[data-copied="true"] {
@@ -166,11 +147,11 @@
   }
 
   .terms {
-    @apply text-center text-[.6875rem] leading-[1.65] text-[var(--muted)];
+    @apply text-center text-[.6875rem] leading-[1.65] text-[var(--muted)] max-sm:text-xs;
   }
 
   .field-error {
-    @apply text-[.6875rem] leading-[1.5] text-[var(--error-title)];
+    @apply text-[.6875rem] leading-[1.5] text-[var(--error-title)] max-sm:text-xs;
   }
 
   .demo-dropdown {

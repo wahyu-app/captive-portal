@@ -102,7 +102,7 @@ scripts/build.mjs  Static output packaging
 vercel.json        Vercel build and output configuration
 ```
 
-Colors and responsive presentation scaling are defined in `styles/input.css`. Page content and the support address are in `index.html`; demo credentials and state behavior are in `main.js`.
+Colors, typography, and responsive styles are defined in `styles/input.css`. Page content and the support address are in `index.html`; demo credentials and state behavior are in `main.js`.
 
 ## Asset credits
 
